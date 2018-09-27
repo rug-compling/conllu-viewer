@@ -1,0 +1,32 @@
+#!/bin/bash
+
+TMP=/tmp/conllu-form-$$
+
+# oude bestanden opruimen
+touch --date=-10min $TMP.touch
+for i in /tmp/conllu-form-*
+do
+    if [ $i -ot $TMP.touch ]
+    then
+	rm -f $i
+    fi
+done
+rm -f $TMP.touch
+
+cat | ./extract > $TMP.conllu
+echo >> $TMP.conllu
+echo >> $TMP.conllu
+./conllu2svg $TMP.conllu > $TMP.html 2> $TMP.err
+if [ -s $TMP.err ]
+then
+    echo "Content-type: text/plain; charset=utf-8"
+    echo
+    perl -p -e 's!^in /tmp/conllu-form-.*.conllu, line!line!' $TMP.err
+    echo
+    cat -n $TMP.conllu
+else
+    echo "Content-type: text/html; charset=utf-8"
+    echo
+    perl -p -e 's!href="!href="../!; s!src="!src="../!' $TMP.html
+fi
+rm -f $TMP.conllu $TMP.html $TMP.err

@@ -1,0 +1,19 @@
+#!/usr/bin/env perl
+
+$boundary = <>;
+$boundary =~ s/\s*$//;
+$output = 0;
+for (<>) {
+    $line = $_;
+    $line =~ s/\s*$//;
+    if ($output == 1) {
+	if ($line =~ /^$boundary/) {
+	    exit 0;
+	}
+	print("$line\n");
+    } else {
+        if (/^\s*$/) {
+	    $output = 1;
+	}
+    }
+}

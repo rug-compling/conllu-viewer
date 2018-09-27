@@ -1,0 +1,48 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+    <title>CoNLL-U viewer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="../favicon.ico" type="image/ico">
+    <base target="_blank">
+    <style type="text/css">
+      <!--
+        * {
+          box-sizing: border-box;
+          -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+        }
+        body {
+          border: 0px;
+          margin: 0px;
+          padding: 0px;
+        }
+        #container {
+          margin: 1em;
+        }
+      -->
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      Upload a file with one or more sentences annotated in <a href="http://universaldependencies.org/format.html">CoNLL-U</a> format:<p>
+      <form action="http://www.let.rug.nl/kleiweg/conllu/bin/form" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+	<input type="file" name="conllu">
+	  <input type="submit">
+      </form>
+      <p>
+	Here is an <a href="example.conllu">example</a>
+	<p>
+	<b><em>&mdash;&mdash; OR &mdash;&mdash;</em></b>
+	<p>
+	  Enter something in CoNLL-U format here:<p>
+	  <form action="http://www.let.rug.nl/kleiweg/conllu/bin/form" method="post" enctype="multipart/form-data"  accept-charset="utf-8">
+	   <textarea name="conllu" rows="30" style="width:100%;white-space:pre"></textarea><br>
+	   <input type="reset">
+	   <input type="submit">
+      </form>
+
+    </div>
+  </body>
+</html>

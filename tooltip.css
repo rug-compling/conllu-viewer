@@ -1,0 +1,21 @@
+// body {font:14px/1.5 Verdana, Arial, Helvetica, sans-serif; }
+
+#tt {position:absolute; display:block; }
+#tttop {display:block; height:5px; overflow:hidden}
+#ttcont {display:block; padding:.5em 1em; background:#666; color:#FFF; overflow:visible;}
+#ttbot {display:block; height:5px; overflow:hidden}
+
+table.attr tr {
+    padding: 0px;
+    margin: 0px;
+}
+
+table.attr tr td {
+    margin: 0px;
+    padding: 0px;
+    vertical-align: top;
+}
+
+table.attr tr td.lbl {
+    padding-right: 1em;
+}

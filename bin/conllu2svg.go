@@ -281,13 +281,11 @@ func doSentence(lines []Line, filename string, id int) {
 			if !ok {
 				x(fmt.Errorf("Unknown head position %s", item.there), filename, item.lineno)
 			}
-			if headpos != 0 {
-				dependencies = append(dependencies, &Dependency{
-					end:     end,
-					headpos: headpos,
-					rel:     [2]string{item.rel, ""},
-					dist:    abs(end - headpos)})
-			}
+			dependencies = append(dependencies, &Dependency{
+				end:     end,
+				headpos: headpos,
+				rel:     [2]string{item.rel, ""},
+				dist:    abs(end - headpos)})
 		}
 
 		if item.deps != "_" {

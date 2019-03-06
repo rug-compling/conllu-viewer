@@ -1,1 +1,0 @@
-git --work-tree=$HOME/web add $HOME/web/cgi-bin/conllu

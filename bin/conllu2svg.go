@@ -89,9 +89,9 @@ func main() {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>Universal Dependencies</title>
-<link rel="stylesheet" type="text/css" href="tooltip.css" />
-<script type="text/javascript" src="jquery.js"></script>
-<script type="text/javascript" src="tooltip.js"></script>
+<link rel="stylesheet" type="text/css" href="../conllu/tooltip.css" />
+<script type="text/javascript" src="../conllu/jquery.js"></script>
+<script type="text/javascript" src="../conllu/tooltip.js"></script>
 <script type="text/javascript">
 var tts = [];
 var normal = [];

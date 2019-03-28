@@ -1,0 +1,2 @@
+AddType text/plain .conllu
+AddCharset utf-8 .conllu

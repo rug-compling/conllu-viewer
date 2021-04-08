@@ -78,6 +78,8 @@ type Multi struct {
 var (
 	dependencies []*Dependency
 	anchors      [][]Anchor
+	columns      = make(map[string]int)
+	nColumns     int
 )
 
 func main() {
@@ -217,6 +219,7 @@ function unmrk(id, i, j) {
 <body>
 `)
 
+	setColumns("# global.columns = ID FORM LEMMA UPOS XPOS FEATS HEAD DEPREL DEPS MISC")
 	id := 0
 	for _, filename := range os.Args[1:] {
 		if len(os.Args) > 2 {
@@ -243,6 +246,9 @@ function unmrk(id, i, j) {
 					inComments = false
 				}
 			} else if line[0] == '#' {
+				if f := strings.Fields(line); len(f) > 2 && f[1] == "global.columns" && f[2] == "=" {
+					x(setColumns(line), filename, linecount)
+				}
 				if inDep {
 					x(fmt.Errorf("Comment line in dependency"), filename, linecount)
 				}
@@ -280,6 +286,23 @@ function unmrk(id, i, j) {
 	fp.Close()
 }
 
+func setColumns(s string) error {
+	ff := strings.Fields(s)[3:]
+	nColumns = len(ff)
+	for _, c := range []string{"ID", "FORM", "LEMMA", "UPOS", "XPOS", "FEATS", "HEAD", "DEPREL", "DEPS", "MISC"} {
+		columns[c] = nColumns
+	}
+	for i, c := range ff {
+		columns[c] = i
+	}
+	for _, c := range []string{"ID", "FORM", "HEAD", "DEPREL"} {
+		if columns[c] == nColumns {
+			return fmt.Errorf("Missing required field %s in global.columns", c)
+		}
+	}
+	return nil
+}
+
 func doSentence(lines []Line, filename string, id int) {
 	dependencies = make([]*Dependency, 0)
 
@@ -297,36 +320,41 @@ func doSentence(lines []Line, filename string, id int) {
 		if len(aa) < 2 {
 			aa = strings.Fields(line.text)
 		}
-		if len(aa) != 10 {
+		if len(aa) != nColumns {
 			x(fmt.Errorf("Wrong number of fields"), filename, line.lineno)
 		}
+		aa = append(aa, "_")
 		for i, a := range aa {
 			aa[i] = strings.TrimSpace(a)
 		}
 
-		if strings.Contains(aa[0], "-") {
-			multis = append(multis, Multi{id: aa[0], word: aa[1], lineno: line.lineno})
+		if strings.Contains(aa[columns["ID"]], ".") && columns["DEPS"] == nColumns {
+			continue
+		}
+
+		if strings.Contains(aa[columns["ID"]], "-") {
+			multis = append(multis, Multi{id: aa[columns["ID"]], word: aa[columns["FORM"]], lineno: line.lineno})
 			continue
 		}
 		at := ""
-		if aa[5] != "_" {
-			at = strings.Replace(strings.Replace(aa[5], "|", ", ", -1), "=", ": ", -1)
+		if aa[columns["FEATS"]] != "_" {
+			at = strings.Replace(strings.Replace(aa[columns["FEATS"]], "|", ", ", -1), "=", ": ", -1)
 		}
 		items = append(items, &Item{
 			lineno:   line.lineno,
-			here:     aa[0],
-			word:     aa[1],
-			lemma:    aa[2],
-			postag:   aa[3],
-			xpostag:  aa[4],
+			here:     aa[columns["ID"]],
+			word:     aa[columns["FORM"]],
+			lemma:    aa[columns["LEMMA"]],
+			postag:   aa[columns["UPOS"]],
+			xpostag:  aa[columns["XPOS"]],
 			attribs:  at,
-			there:    aa[6],
-			rel:      aa[7],
-			deps:     aa[8],
-			enhanced: strings.Contains(aa[0], "."),
+			there:    aa[columns["HEAD"]],
+			rel:      aa[columns["DEPREL"]],
+			deps:     aa[columns["DEPS"]],
+			enhanced: strings.Contains(aa[columns["ID"]], "."),
 		})
 		n++
-		positions[aa[0]] = n
+		positions[aa[columns["ID"]]] = n
 	}
 
 	for i, item := range items {
@@ -352,14 +380,14 @@ func doSentence(lines []Line, filename string, id int) {
 				if len(a) != 2 {
 					x(fmt.Errorf("Invalid dependency: %s", part), filename, item.lineno)
 				}
-				headpos, ok := positions[a[0]]
+				headpos, ok := positions[a[columns["ID"]]]
 				if !ok {
-					x(fmt.Errorf("Unknown head position %s", a[0]), filename, item.lineno)
+					x(fmt.Errorf("Unknown head position %s", a[columns["ID"]]), filename, item.lineno)
 				}
 				dependencies = append(dependencies, &Dependency{
 					end:     end,
 					headpos: headpos,
-					rel:     [2]string{"", a[1]},
+					rel:     [2]string{"", a[columns["FORM"]]},
 					dist:    abs(end - headpos)})
 				hasEnhanced = true
 			}

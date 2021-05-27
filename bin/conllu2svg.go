@@ -109,6 +109,23 @@ function toggle(id, enhanced) {
     normal[id] = true;
   }
 }
+function toggleAll(enhanced) {
+  unhold();
+  if (enhanced) {
+    $('.enhanced').css({'visibility':''});
+    $('.normal').css({'visibility':'hidden'});
+    $('.rb').prop('checked', false);
+    $('.re').prop('checked', true);
+  } else {
+    $('.enhanced').css({'visibility':'hidden'});
+    $('.normal').css({'visibility':''});
+    $('.re').prop('checked', false);
+    $('.rb').prop('checked', true);
+  }
+  for (var id in tts) {
+    normal[id] = !enhanced;
+  }
+}
 
 var holding  = false;
 var holdedge = false;
@@ -194,6 +211,9 @@ function unmrk(id, i, j) {
 </script>
 <style type="text/css">
   body { padding-bottom: 200px; }
+  #top {
+    margin-bottom: 2em;
+  }
   div.comments {
     padding: 1em;
     margin: 2em 0px 1em 0px;
@@ -217,6 +237,11 @@ function unmrk(id, i, j) {
 </style>
 </head>
 <body>
+<div id="top">
+Global:
+<button onclick="toggleAll(false)">Basic</button>
+<button onclick="toggleAll(true)">Enhanced</button>
+</div>
 `)
 
 	setColumns("# global.columns = ID FORM LEMMA UPOS XPOS FEATS HEAD DEPREL DEPS MISC")
@@ -786,8 +811,8 @@ tts['%s'] = [
 	fmt.Println("</script>")
 	if hasEnhanced {
 		fmt.Printf(`<div class="udcontrol">
-<input type="radio" id="btnb%s" name="btn%s" onclick="toggle('%s',false)" /><label for="btnb%s">Basic</label>
-<input type="radio" id="btne%s" name="btn%s" onclick="toggle('%s',true)" checked /><label for="btne%s">Enhanced</label>
+<input type="radio" id="btnb%s" name="btn%s" onclick="toggle('%s',false)" class="rb" /><label for="btnb%s">Basic</label>
+<input type="radio" id="btne%s" name="btn%s" onclick="toggle('%s',true)" class="re" checked /><label for="btne%s">Enhanced</label>
 </div>
 `, svgID, svgID, svgID, svgID, svgID, svgID, svgID, svgID)
 	}

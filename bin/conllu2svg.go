@@ -238,7 +238,7 @@ function unmrk(id, i, j) {
 </head>
 <body>
 <div id="top">
-Global:
+Select all:
 <button onclick="toggleAll(false)">Basic</button>
 <button onclick="toggleAll(true)">Enhanced</button>
 </div>
@@ -815,6 +815,11 @@ tts['%s'] = [
 <input type="radio" id="btne%s" name="btn%s" onclick="toggle('%s',true)" class="re" checked /><label for="btne%s">Enhanced</label>
 </div>
 `, svgID, svgID, svgID, svgID, svgID, svgID, svgID, svgID)
+	} else {
+		fmt.Printf(`<div class="udcontrol">
+<input type="radio" id="btnb%s" name="btn%s" onclick="toggle('%s',false)" class="rb" checked /><label for="btnb%s">Basic</label>
+</div>
+`, svgID, svgID, svgID, svgID)
 	}
 }
 

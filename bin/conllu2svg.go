@@ -178,7 +178,7 @@ function hld(id, i, j) {
 function mark(id, i) {
   var cl = normal[id] ? 'n' : 'e';
   var t = tts[id][i-1];
-  tooltip.show('<em>' + t[0] + '</em><br>\n' + t[1] + '<br>\n' + t[2] + '<br>\nLemma: ' + t[3] + (t[4] == "_" ? "" : '<br>\nXpos: ' + t[4]));
+  tooltip.show(t[0] + ': <em>' + t[1] + '</em><br>\n' + t[2] + '<br>\n' + t[3] + '<br>\nLemma: ' + t[4] + (t[5] == "_" ? "" : '<br>\nXpos: ' + t[5]));
   if (!holding) {
     $('svg#' + id + ' .l' + cl + i).css({'fill':'blue','font-weight':'bold'});
     $('svg#' + id + ' .e' + cl + i).css({'stroke':'blue','stroke-width':3});
@@ -868,7 +868,8 @@ func classlbl(item *Item) string {
 }
 
 func tooltip(item *Item) string {
-	return fmt.Sprintf("['%s','%s','%s','%s','%s']",
+	return fmt.Sprintf("['%s', '%s','%s','%s','%s','%s']",
+		item.here,
 		html.EscapeString(item.word),
 		html.EscapeString(item.postag),
 		html.EscapeString(item.attribs),
